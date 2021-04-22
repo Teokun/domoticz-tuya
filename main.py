@@ -171,6 +171,10 @@ def main():
             tuya = tuya_api()
             tuya.login()
             tuya.switch(sys.argv[2], sys.argv[3])
+        elif sys.argv[1] == '--control':
+            tuya = tuya_api()
+            tuya.login()
+            tuya.control(sys.argv[2], sys.argv[3])
         elif sys.argv[1] == '--status':
             tuya = tuya_api()
             tuya.login()
