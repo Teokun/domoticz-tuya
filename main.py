@@ -1,8 +1,5 @@
 #!/opt/bin/python3
-#
-# need at least python 3.8 -- for installation on Rpi follow : https://angorange.com/raspberry-pi-installation-de-python-3-8
-# Update By Teokun / 2021-04-22
-
+ 
 __author__ = "Yann LEROUX"
 __version__ = "1.0.2"
 __email__ = "yleroux@gmail.com"
@@ -29,7 +26,7 @@ class tuya_api:
             self.secret    = data['app_id']
 
     def _debug(self, text):
-        if self._debug:
+        if self.debug:
             print(text)
 
     def _getInfo(self):
@@ -38,7 +35,7 @@ class tuya_api:
         print('Token:' + self.token)
 
     def _getSignature(self, token = False):
-        self.debug('Get sign...')
+        self._debug('Get sign...')
         self.timestamp = int(time()*1000)
         if token:
             message = self.client_id + self.token + str(self.timestamp)   
@@ -98,7 +95,6 @@ class tuya_api:
                 print('Execution Error: ' + result['msg'])   
         else:
             print("HTTP %i - %s, Message %s" % (res.status_code, res.reason, res.text))
-
 # adds Blinds support
     def control(self, id, value):
         if not self._isLogged:
@@ -127,8 +123,7 @@ class tuya_api:
                 print('Execution Error: ' + result['msg'])   
         else:
             print("HTTP %i - %s, Message %s" % (res.status_code, res.reason, res.text))
-          
-          
+            
     def getStatus(self, id):
         if not self._isLogged:
             return
@@ -159,7 +154,6 @@ def help():
     print('Options available')
     print('-----------------')
     print('main.py --switch <ID> <True|False>')
-    print('main.py --control <ID> <open|stop|close>')
     print('main.py --status <ID>') 
     print('main.py --toggle <ID>')  
 
