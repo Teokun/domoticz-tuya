@@ -1,5 +1,8 @@
 #!/opt/bin/python3
- 
+#
+# need at least python 3.8 -- for installation on Rpi follow : https://angorange.com/raspberry-pi-installation-de-python-3-8
+# Update By Teokun / 2021-04-22
+
 __author__ = "Yann LEROUX"
 __version__ = "1.0.2"
 __email__ = "yleroux@gmail.com"
@@ -35,7 +38,7 @@ class tuya_api:
         print('Token:' + self.token)
 
     def _getSignature(self, token = False):
-        self._debug('Get sign...')
+        self.debug('Get sign...')
         self.timestamp = int(time()*1000)
         if token:
             message = self.client_id + self.token + str(self.timestamp)   
@@ -96,6 +99,36 @@ class tuya_api:
         else:
             print("HTTP %i - %s, Message %s" % (res.status_code, res.reason, res.text))
 
+# adds Blinds support
+    def control(self, id, value):
+        if not self._isLogged:
+            return
+
+        self._debug("Control...")
+        self._getSignature(True)
+        
+        header = {
+            'client_id'    : self.client_id,
+            'access_token' : self.token,
+            'sign'         : self.signature,
+            't'            : str(self.timestamp),
+            'sign_method'  : self._encode,
+            'Content-Type' :'application/json'
+        }
+        
+        data = '{\n\t\"commands\":[\n\t\t{\n\t\t\t\"code\": \"control_1\",\n\t\t\t\"value\":'+value+'\n\t\t}\n\t]\n}' 
+        
+        res = requests.post(self.url_api + '/v1.0/devices/' + id + '/commands', headers=header, data = data)
+        if res.ok:
+            result = json.loads(res.content)
+            if result['success']:
+                self._debug('Device ' + id + 'status set to ' + value)
+            else:
+                print('Execution Error: ' + result['msg'])   
+        else:
+            print("HTTP %i - %s, Message %s" % (res.status_code, res.reason, res.text))
+          
+          
     def getStatus(self, id):
         if not self._isLogged:
             return
@@ -126,6 +159,7 @@ def help():
     print('Options available')
     print('-----------------')
     print('main.py --switch <ID> <True|False>')
+    print('main.py --control <ID> <open|stop|close>')
     print('main.py --status <ID>') 
     print('main.py --toggle <ID>')  
 
