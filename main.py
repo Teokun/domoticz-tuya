@@ -116,7 +116,7 @@ class tuya_api:
             'Content-Type' :'application/json'
         }
         
-        data = '{\n\t\"commands\":[\n\t\t{\n\t\t\t\"code\": \"control_1\",\n\t\t\t\"value\":'+value+'\n\t\t}\n\t]\n}' 
+        data = '{\n\t\"commands\":[\n\t\t{\n\t\t\t\"code\": \"control\",\n\t\t\t\"value\":'+value+'\n\t\t}\n\t]\n}' 
         
         res = requests.post(self.url_api + '/v1.0/devices/' + id + '/commands', headers=header, data = data)
         if res.ok:
