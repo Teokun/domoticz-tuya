@@ -29,7 +29,7 @@ class tuya_api:
             self.secret    = data['app_id']
 
     def _debug(self, text):
-        if self.debug:
+        if self._debug:
             print(text)
 
     def _getInfo(self):
